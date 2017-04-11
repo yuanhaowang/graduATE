@@ -5,6 +5,7 @@ import android.app.AlertDialog;
 import android.content.pm.PackageManager;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
@@ -18,7 +19,8 @@ import me.dm7.barcodescanner.zxing.ZXingScannerView;
 
 public class MainActivity extends AppCompatActivity implements ZXingScannerView.ResultHandler {
     private ZXingScannerView mScannerView;
-    public String product_name;
+    private String product_code;
+    private String url;
 
 
     @Override
@@ -56,13 +58,13 @@ public class MainActivity extends AppCompatActivity implements ZXingScannerView.
 
         // show the scanner result into dialog box.
 
-
+        product_code = rawResult.getText();
 
         // If you would like to resume scanning, call this method below:
        // mScannerView.resumeCameraPreview(this);
 
         RetrieveFeedTask job = new RetrieveFeedTask();
-        job.execute();
+        job.execute(product_code);
 
         displayResult();
 
@@ -73,19 +75,14 @@ public class MainActivity extends AppCompatActivity implements ZXingScannerView.
 
     }
 
-    class RetrieveFeedTask extends AsyncTask<Void, Void, String> {
+    class RetrieveFeedTask extends AsyncTask<String, Void, String> {
+
         public AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
 
-
-        private Exception exception;
-
-
-        protected String doInBackground(Void... urls) {
-            // Do some validation here
-
+        protected String doInBackground(String... product_code) {
             try {
                 OutpanAPI api = new OutpanAPI("fdb77d24bdd184b80e7377a1bef3e5e3");
-                OutpanObject obj = api.getProduct("0043600004122");
+                OutpanObject obj = api.getProduct(String.valueOf(product_code));
                 System.out.println(obj.gtin); // --> 0796435419035
                 System.out.println(obj.outpan_url); // --> http://www.outpan.com/view_product.php?barcode=0796435419035
                 System.out.println(obj.name); // --> Optoma ML750 Palm-sized Projection Powerhouse
@@ -99,10 +96,18 @@ public class MainActivity extends AppCompatActivity implements ZXingScannerView.
         }
 
         protected void onPostExecute(String name) {
-            builder.setTitle("Scan Result");
-            builder.setMessage(name);
-            AlertDialog alert1 = builder.create();
-            alert1.show();
+            if (name == ""){
+                builder.setTitle("Error");
+                builder.setMessage("Product not found");
+                AlertDialog alert1 = builder.create();
+                alert1.show();
+            }
+            else {
+                builder.setTitle("Scan Result");
+                builder.setMessage(name);
+                AlertDialog alert1 = builder.create();
+                alert1.show();
+            }
         }
     }
 

@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package io.github.johncipponeri.outpanapi.android;
+package app.num.barcodescannerproject;
 
 import java.io.UnsupportedEncodingException;
 

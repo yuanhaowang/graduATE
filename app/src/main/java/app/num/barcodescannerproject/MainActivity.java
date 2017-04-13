@@ -19,6 +19,7 @@ public class MainActivity extends AppCompatActivity {
 
     public static int appflag = 0;
     private Button buttonView;
+    private Button buttonScan;
     private Button buttonAdd;
 
     @Override
@@ -28,6 +29,7 @@ public class MainActivity extends AppCompatActivity {
         super.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LOCKED);
 
         buttonView = (Button) findViewById(R.id.buttonView);
+        buttonScan = (Button) findViewById(R.id.buttonScan);
         buttonAdd = (Button) findViewById(R.id.buttonAdd);
 
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA) == PackageManager.PERMISSION_DENIED){
@@ -41,11 +43,19 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        buttonAdd.setOnClickListener(new View.OnClickListener() {
+        buttonScan.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 appflag = 2;
                 startActivity(new Intent(MainActivity.this, ScanBar.class));
+            }
+        });
+
+        buttonAdd.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                appflag = 3;
+                startActivity(new Intent(MainActivity.this, AddBar.class));
             }
         });
     }

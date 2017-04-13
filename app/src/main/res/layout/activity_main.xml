@@ -10,26 +10,23 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context="app.num.barcodescannerproject.MainActivity">
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Inventory"
-        android:id="@+id/MainTitle"
-        android:textAppearance="@android:style/TextAppearance.Material.Title"
-        android:layout_marginStart="25dp"
-        android:layout_marginTop="33dp"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentStart="true" />
-
-    <TextView
+        <TextView
         android:text="View Inventory"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="52dp"
         android:id="@+id/SubTitle1"
         android:textAppearance="@android:style/TextAppearance.Material.Subhead"
-        android:layout_below="@+id/MainTitle"
-        android:layout_alignStart="@+id/MainTitle" />
+        />
+
+    <Button
+        android:text="Scan"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/buttonScan"
+        android:layout_marginTop="31dp"
+        android:layout_below="@+id/SubTitle2"
+        android:layout_centerHorizontal="true" />
 
     <Button
         android:text="Add"
@@ -37,7 +34,7 @@
         android:layout_height="wrap_content"
         android:id="@+id/buttonAdd"
         android:layout_marginTop="31dp"
-        android:layout_below="@+id/SubTitle2"
+        android:layout_below="@+id/buttonScan"
         android:layout_centerHorizontal="true" />
 
     <Button

@@ -35,13 +35,7 @@ public class OutpanAPI {
 
 			URLConnection uc = url.openConnection();
 			Log.e("handler", url.toString());
-			//Log.e("handler", uc.getClass().getName());
-			
-			//String key = api_key + ":";
-			//String basicAuth = "Basic " + new String(AndroidBase64.encode(key.getBytes(), AndroidBase64.NO_WRAP));
-			
-			//uc.setRequestProperty ("Authorization", basicAuth);
-			
+
 			InputStream in = uc.getInputStream();
 			InputStreamReader isr = new InputStreamReader(in);
 			

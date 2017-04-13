@@ -27,9 +27,9 @@ public class ScanBar extends AppCompatActivity implements ZXingScannerView.Resul
     protected void onCreate(Bundle savedInstanceState) {
 
         super.onCreate(savedInstanceState);
-        /*setContentView(R.layout.scanbar);
+        /*setContentView(R.layout.scanbar);*/
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA) == PackageManager.PERMISSION_DENIED){
-            ActivityCompat.requestPermissions(this, new String[] {Manifest.permission.CAMERA}, 1);}*/
+            ActivityCompat.requestPermissions(this, new String[] {Manifest.permission.CAMERA}, 1);}
 
         mScannerView = new ZXingScannerView(this);   //Initializes scanner view
         setContentView(mScannerView);

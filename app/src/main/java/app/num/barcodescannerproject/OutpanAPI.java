@@ -28,9 +28,14 @@ public class OutpanAPI {
 		JSONObject jsonResult = new JSONObject();
 		
 		try {
-			URL url = new URL("https://api.outpan.com/v2/products/" + barcode + "?apikey=fdb77d24bdd184b80e7377a1bef3e5e3");
+			//All comment portions are for OutPan API
+			//URL url = new URL("https://api.outpan.com/v2/products/" + barcode + "?apikey=fdb77d24bdd184b80e7377a1bef3e5e3");
+
+			URL url = new URL("http://api.upcdatabase.org/json/f4aa47e362e353359cf95872a9401298/" + barcode);
+
 			URLConnection uc = url.openConnection();
-			Log.e("handler", uc.getClass().getName());
+			Log.e("handler", url.toString());
+			//Log.e("handler", uc.getClass().getName());
 			
 			//String key = api_key + ":";
 			//String basicAuth = "Basic " + new String(AndroidBase64.encode(key.getBytes(), AndroidBase64.NO_WRAP));
@@ -65,18 +70,10 @@ public class OutpanAPI {
 	}
 	
 	public OutpanObject getProductName(String barcode) {
-		return new OutpanObject(executeGet(barcode, "/name"));
+		return new OutpanObject(executeGet(barcode, "description"));
 	}
 	
 	public OutpanObject getProductAttributes(String barcode) {
 		return new OutpanObject(executeGet(barcode, "/attributes"));
-	}
-	
-	public OutpanObject getProductImages(String barcode) {
-		return new OutpanObject(executeGet(barcode, "/images"));
-	}
-	
-	public OutpanObject getProductVideos(String barcode) {
-		return new OutpanObject(executeGet(barcode, "/videos"));
 	}
 }

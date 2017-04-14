@@ -1,5 +1,6 @@
 package app.num.barcodescannerproject;
 
+import java.io.Console;
 import java.io.IOException;
 import java.util.EnumMap;
 import java.util.EnumSet;
@@ -8,13 +9,12 @@ import java.util.Map;
 import com.google.zxing.BarcodeFormat;
 import com.google.zxing.BinaryBitmap;
 import com.google.zxing.DecodeHintType;
-import com.google.zxing.MultiFormatReader;
+import com.google.zxing.FormatException;
 import com.google.zxing.NotFoundException;
 import com.google.zxing.RGBLuminanceSource;
 import com.google.zxing.Result;
 import com.google.zxing.common.HybridBinarizer;
-import com.google.zxing.multi.GenericMultipleBarcodeReader;
-import com.google.zxing.multi.MultipleBarcodeReader;
+
 
 import android.app.Activity;
 import android.content.Intent;
@@ -29,14 +29,14 @@ import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
-import com.google.zxing.Result;
+import com.google.zxing.oned.MultiFormatUPCEANReader;
 
 public class AddBar extends Activity {
 
     private ImageView barcodeImageView;
     private Button pickBarcodeButton;
     private TextView barcodeResultTextView;
-    private String code;
+
 
 
     protected static final int PICK_IMAGE_REQUEST = 100;
@@ -50,7 +50,6 @@ public class AddBar extends Activity {
         initializeViews();
 
     }
-
     /**
      * Initializing views
      */
@@ -83,6 +82,7 @@ public class AddBar extends Activity {
                     try {
                         Bitmap bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), uri);
                         new ScanTask(bitmap).execute();
+                        new getname().execute();
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
@@ -108,32 +108,35 @@ public class AddBar extends Activity {
         protected void onPreExecute() {
             super.onPreExecute();
             barcodeImageView.setImageBitmap(bitmap);
+            barcodeResultTextView.setText("Processing...");
         }
 
         @Override
         protected String doInBackground(String... params) {
             try {
-
-                Result[] results = decode(bitmap);
-
+                /*Result[] results = decode(bitmap);
                 if (null != results) {
                     for (int i = 0; i < results.length; i++) {
                         result = result +" ("+(i+1)+") "+ results[i].getText() + "\n";
                     }
-                } else {
+                }*/
+                result = decode(bitmap);
+                if (result == null) {
                     result = "No barcode detected";
                 }
             } catch (Exception e) {
                 result = "Exception";
+                Log.d("handler", "Bug2");
                 e.printStackTrace();
             }
             return null;
         }
 
-        @Override
+        //@Override
         protected void onPostExecute(String res) {
-            barcodeResultTextView.setText(result);
-            super.onPostExecute(res);
+            new getname().execute(result);
+            //barcodeResultTextView.setText(result);
+            //super.onPostExecute(res);
         }
     }
 
@@ -141,22 +144,23 @@ public class AddBar extends Activity {
      * @param imageBitmap : Bitmap image
      * @return Array of barcode result
      */
-    public Result[] decode(Bitmap imageBitmap) {
+    //public Result[] decode(Bitmap imageBitmap) {
+     public String decode(Bitmap imageBitmap) {
 
-        MultiFormatReader reader = null;
+        //MultiFormatReader reader = null;
         Map<DecodeHintType, Object> hints = new EnumMap<DecodeHintType, Object>(DecodeHintType.class);
-
-        //DecodeHintType code = new DecodeHintType.class;
 
 		/* There are different format to create barcode and qrcode,
 		 * while extracting we are adding all the possible format for better result.
 		 */
         hints.put(DecodeHintType.POSSIBLE_FORMATS, EnumSet.allOf(BarcodeFormat.class));
-        //hints.put(DecodeHintType.PURE_BARCODE, EnumSet.allOf(BarcodeFormat.class));
+        //hints.put(DecodeHintType.POSSIBLE_FORMATS, BarcodeFormat.UPC_EAN_EXTENSION);
         hints.put(DecodeHintType.TRY_HARDER, Boolean.TRUE);
 
-        reader = new MultiFormatReader();
-        reader.setHints(hints);
+        //reader = new MultiFormatReader();
+        //reader.setHints(hints);
+
+         MultiFormatUPCEANReader reader = new MultiFormatUPCEANReader(hints);
 
         int width = imageBitmap.getWidth();
         int height = imageBitmap.getHeight();
@@ -166,28 +170,45 @@ public class AddBar extends Activity {
         RGBLuminanceSource source = new RGBLuminanceSource(width, height, pixels);
         BinaryBitmap bitmap = new BinaryBitmap(new HybridBinarizer(source));
 
-        MultipleBarcodeReader multiReader = new GenericMultipleBarcodeReader(reader);
+        //MultipleBarcodeReader multiReader = new GenericMultipleBarcodeReader(reader);
 
-        Result[] theResults = null;
+        //Result[] theResults = null;
+        Result theResult = null;
+         String code = "";
         try {
 			/* decode multiple is used so that if multiple barcode is present in single image we can get result for all of them.
 			 */
-            theResults = multiReader.decodeMultiple(bitmap, hints);
-        } catch (NotFoundException e1) {
-            e1.printStackTrace();
+            //theResult = multiReader.decodeMultiple(bitmap, hints);
+            theResult = reader.decode(bitmap, hints);
+            code = theResult.getText();
         }
-
-        return theResults;
+        catch (NotFoundException e1) {
+            e1.printStackTrace();
+            Log.d("handler", "Bug0");
+        } catch (FormatException e) {
+            e.printStackTrace();
+            Log.d("handler", "Bug1");
+        }
+         return code;
     }
 
-    /*public void handleResult(Result rawResult) {
-        // Do something with the result here
+    class getname extends AsyncTask<String, Void, String> {
+        protected String doInBackground(String... product_code) {
+            try {
+                OutpanAPI api = new OutpanAPI("fdb77d24bdd184b80e7377a1bef3e5e3");
+                OutpanObject obj = api.getProductName(product_code[0]);
+                Log.e("handler", obj.name);
+                return obj.name;
+            }
+            catch(Exception e) {
+                Log.e("ERROR", e.getMessage(), e);
+                return null;
+            }
+        }
 
-        Log.e("handler", rawResult.getText()); // Prints scan results
-        //Log.e("handler", rawResult.getBarcodeFormat().toString()); // Prints the scan format (qrcode)
-
-        // show the scanner result into dialog box.
-
-        code = rawResult.getText();
-    }*/
+        protected void onPostExecute(String name) {
+            barcodeResultTextView.setText(name);
+            }
+        }
 }
+

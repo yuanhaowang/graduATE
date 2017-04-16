@@ -26,9 +26,9 @@
         </activity>
         <activity android:name=".ScanBar"
             android:screenOrientation="portrait"/>
-        <activity android:name=".ViewInv"
-            android:screenOrientation="portrait"/>
         <activity android:name=".AddBar"
+            android:screenOrientation="portrait"/>
+        <activity android:name=".CheckInv"
             android:screenOrientation="portrait"/>
     </application>
 

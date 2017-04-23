@@ -8,6 +8,7 @@ public class OutpanObject {
 	public String
 		gtin,
 		outpan_url,
+		valid,
 		name;
 
 	public OutpanObject() {
@@ -25,9 +26,16 @@ public class OutpanObject {
 
 			/*if (!json.isNull("name"))
 				this.name = json.getString("name");*/
+			this.valid = json.getString("valid");
 
-			if (!json.isNull("description"))
-				this.name = json.getString("description");
+			if(valid != "false")
+			{
+				if (!json.isNull("description"))
+					this.name = json.getString("description");
+				else
+					this.name = json.getString("name");
+			}
+
 		}
 		catch (JSONException e) {
 			e.printStackTrace();

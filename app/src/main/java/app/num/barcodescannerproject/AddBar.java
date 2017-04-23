@@ -1,10 +1,20 @@
 package app.num.barcodescannerproject;
 
-import java.io.Console;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.PrintWriter;
+import java.util.ArrayList;
 import java.util.EnumMap;
 import java.util.EnumSet;
+import java.util.List;
 import java.util.Map;
+import java.util.logging.Handler;
 
 import com.google.zxing.BarcodeFormat;
 import com.google.zxing.BinaryBitmap;
@@ -17,26 +27,41 @@ import com.google.zxing.common.HybridBinarizer;
 
 
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
+import android.nfc.Tag;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Environment;
 import android.provider.MediaStore;
+import android.provider.Settings;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
+import android.widget.EditText;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
+import android.widget.NumberPicker;
 import android.widget.TextView;
 import com.google.zxing.oned.MultiFormatUPCEANReader;
+
+import com.opencsv.CSVWriter;
+
+import static java.lang.String.valueOf;
+
 
 public class AddBar extends Activity {
 
     private ImageView barcodeImageView;
     private Button pickBarcodeButton;
     private TextView barcodeResultTextView;
-
+    public String product_name = "";
 
 
     protected static final int PICK_IMAGE_REQUEST = 100;
@@ -46,9 +71,9 @@ public class AddBar extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_launcher);
-
+        ImageView img = (ImageView) findViewById(R.id.barcode_image);
+        img.setImageResource(R.drawable.beer);
         initializeViews();
-
     }
     /**
      * Initializing views
@@ -82,7 +107,6 @@ public class AddBar extends Activity {
                     try {
                         Bitmap bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), uri);
                         new ScanTask(bitmap).execute();
-                        new getname().execute();
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
@@ -121,22 +145,29 @@ public class AddBar extends Activity {
                     }
                 }*/
                 result = decode(bitmap);
+                /*Log.d("result", result);
                 if (result == null) {
                     result = "No barcode detected";
-                }
+                }*/
             } catch (Exception e) {
                 result = "Exception";
                 Log.d("handler", "Bug2");
                 e.printStackTrace();
             }
-            return null;
+            return result;
         }
 
         //@Override
         protected void onPostExecute(String res) {
-            new getname().execute(result);
-            //barcodeResultTextView.setText(result);
-            //super.onPostExecute(res);
+            if(res != "")
+            {
+                new getname().execute(res);
+            }
+            else
+            {
+                barcodeResultTextView.setText("Product Not Found");
+            }
+
         }
     }
 
@@ -183,8 +214,7 @@ public class AddBar extends Activity {
             code = theResult.getText();
         }
         catch (NotFoundException e1) {
-            e1.printStackTrace();
-            Log.d("handler", "Bug0");
+            code = "";
         } catch (FormatException e) {
             e.printStackTrace();
             Log.d("handler", "Bug1");
@@ -193,12 +223,13 @@ public class AddBar extends Activity {
     }
 
     class getname extends AsyncTask<String, Void, String> {
-        protected String doInBackground(String... product_code) {
+        protected String doInBackground(String... code) {
             try {
                 OutpanAPI api = new OutpanAPI("fdb77d24bdd184b80e7377a1bef3e5e3");
-                OutpanObject obj = api.getProductName(product_code[0]);
-                Log.e("handler", obj.name);
-                return obj.name;
+                OutpanObject obj = api.getProductName(code[0]);
+                Log.e("handler", obj.valid);
+                product_name = obj.name;
+                return obj.valid;
             }
             catch(Exception e) {
                 Log.e("ERROR", e.getMessage(), e);
@@ -206,9 +237,92 @@ public class AddBar extends Activity {
             }
         }
 
-        protected void onPostExecute(String name) {
-            barcodeResultTextView.setText(name);
+        protected void onPostExecute(String name)
+        {
+            if(name != "false") {
+                barcodeResultTextView.setText(product_name);
+                addResult(product_name);
             }
         }
+
+    }
+
+    public void addResult(String name) {
+
+        final List<String> newInv = new ArrayList<String>();
+
+        Context context = AddBar.this;
+
+        final NumberPicker picker = new NumberPicker(context);
+        picker.setMinValue(1);
+        picker.setMaxValue(50);
+
+        final FrameLayout layout = new FrameLayout(context);
+        layout.addView(picker, new FrameLayout.LayoutParams(
+                FrameLayout.LayoutParams.WRAP_CONTENT,
+                FrameLayout.LayoutParams.WRAP_CONTENT,
+                Gravity.CENTER));
+
+        new AlertDialog.Builder(context)
+                .setTitle(name)
+                .setView(layout)
+                .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        int value;
+                        value = picker.getValue();
+                        newInv.add(product_name);
+                        newInv.add(String.valueOf(value));
+                        update(newInv);
+                    }
+                })
+                .setNegativeButton(android.R.string.cancel, null)
+                .show();
+    }
+
+
+    public void update(List<String> newBeer) {
+
+        String[] simpleArray = new String[ newBeer.size() ];
+        newBeer.toArray( simpleArray );
+
+        File path = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS);
+        File file = new File(path, "inventory.csv");
+        if(file.exists()){
+            try {
+                //PrintWriter fw = new PrintWriter(file);
+                PrintWriter fw = new PrintWriter(new FileWriter(file, true));
+                Log.d("handler", "printing to file");
+                for (int i = 0; i < simpleArray.length; i++) {
+                    fw.write(simpleArray[i]);
+                    fw.write(",");
+                }
+                fw.write("\n");
+                fw.flush();
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+        else
+        {
+            path.mkdirs();
+            PrintWriter fw = null;
+            try {
+                fw = new PrintWriter(file);
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+            }
+            Log.d("handler", "making file");
+            for (int i = 0; i < simpleArray.length; i++) {
+                fw.write(simpleArray[i]);
+                fw.write(",");
+            }
+            fw.write("\n");
+            fw.flush();
+        }
+
+    }
 }
 

@@ -145,10 +145,6 @@ public class AddBar extends Activity {
                     }
                 }*/
                 result = decode(bitmap);
-                /*Log.d("result", result);
-                if (result == null) {
-                    result = "No barcode detected";
-                }*/
             } catch (Exception e) {
                 result = "Exception";
                 Log.d("handler", "Bug2");
@@ -249,7 +245,7 @@ public class AddBar extends Activity {
 
     public void addResult(String name) {
 
-        final List<String> newInv = new ArrayList<String>();
+        /*final List<String> newInv = new ArrayList<String>();
 
         Context context = AddBar.this;
 
@@ -277,11 +273,15 @@ public class AddBar extends Activity {
                     }
                 })
                 .setNegativeButton(android.R.string.cancel, null)
-                .show();
+                .show();*/
+        Intent intent = new Intent(this,BeerActivity.class);
+        intent.putExtra("isAdded", true);
+        intent.putExtra("name", name);
+        startActivity(intent);
     }
 
 
-    public void update(List<String> newBeer) {
+    /*public void update(List<String> newBeer) {
 
         String[] simpleArray = new String[ newBeer.size() ];
         newBeer.toArray( simpleArray );
@@ -323,6 +323,6 @@ public class AddBar extends Activity {
             fw.flush();
         }
 
-    }
+    }*/
 }
 

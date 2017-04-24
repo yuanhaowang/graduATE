@@ -7,14 +7,16 @@ package app.num.barcodescannerproject;
 class Beer {
     private String name;
     private int amount;
+    private int rfid;
 
     public Beer(){
 
     }
 
-    public Beer(String name, int amount) {
+    public Beer(String name, int amount, int rfid) {
         setName(name);
         setAmount(amount);
+        setRFID(rfid);
     }
 
     public String getName() {
@@ -31,6 +33,14 @@ class Beer {
 
     public void setAmount(int amount) {
         this.amount = amount;
+    }
+
+    public int getRFID() {
+        return rfid;
+    }
+
+    public void setRFID(int rfid) {
+        this.rfid = rfid;
     }
 
 }

@@ -25,15 +25,17 @@ public class ItemArrayAdapter extends ArrayAdapter<Beer> {
         View v = convertView;
         if (v == null) {
             LayoutInflater vi = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-            v = vi.inflate(R.layout.item_layout, null);
+            v = vi.inflate(R.layout.activity_list_beer_item, null);
         }
         Beer o = item_array.get(amount);
         if (o != null) {
             TextView amo = (TextView) v.findViewById(R.id.amount);
             TextView name = (TextView) v.findViewById(R.id.name);
+            TextView rfid = (TextView) v.findViewById(R.id.rfid);
 
-            amo.setText(String.valueOf(o.getAmount()));
             name.setText(String.valueOf(o.getName()));
+            rfid.setText(String.valueOf(o.getRFID()));
+            amo.setText(String.valueOf(o.getAmount()));
         }
         return v;
     }

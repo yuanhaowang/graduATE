@@ -45,7 +45,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 appflag = 1;
-                startActivity(new Intent(MainActivity.this, ListBeers.class));
+                startActivity(new Intent(MainActivity.this, ViewInv.class));
             }
         });
 

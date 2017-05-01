@@ -26,9 +26,11 @@
             android:screenOrientation="portrait"/>
         <activity android:name=".AddBar"
             android:screenOrientation="portrait"/>
-        <activity android:name=".BeerActivity"
+        <activity android:name=".ViewInv"
             android:screenOrientation="portrait"/>
-        <activity android:name=".ListBeers"
+        <activity android:name=".ViewItem"
+            android:screenOrientation="portrait"/>
+        <activity android:name=".AddItem"
             android:screenOrientation="portrait"/>
     </application>
 

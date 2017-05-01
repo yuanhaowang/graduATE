@@ -245,84 +245,11 @@ public class AddBar extends Activity {
 
     public void addResult(String name) {
 
-        /*final List<String> newInv = new ArrayList<String>();
-
-        Context context = AddBar.this;
-
-        final NumberPicker picker = new NumberPicker(context);
-        picker.setMinValue(1);
-        picker.setMaxValue(50);
-
-        final FrameLayout layout = new FrameLayout(context);
-        layout.addView(picker, new FrameLayout.LayoutParams(
-                FrameLayout.LayoutParams.WRAP_CONTENT,
-                FrameLayout.LayoutParams.WRAP_CONTENT,
-                Gravity.CENTER));
-
-        new AlertDialog.Builder(context)
-                .setTitle(name)
-                .setView(layout)
-                .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialogInterface, int i) {
-                        int value;
-                        value = picker.getValue();
-                        newInv.add(product_name);
-                        newInv.add(String.valueOf(value));
-                        update(newInv);
-                    }
-                })
-                .setNegativeButton(android.R.string.cancel, null)
-                .show();*/
-        Intent intent = new Intent(this,BeerActivity.class);
-        intent.putExtra("isAdded", true);
-        intent.putExtra("name", name);
+        Intent intent = new Intent(this,AddItem.class);
+        //intent.putExtra("isAdded", true);
+        intent.putExtra(Config.ITEM_NAME, name);
         startActivity(intent);
     }
 
-
-    /*public void update(List<String> newBeer) {
-
-        String[] simpleArray = new String[ newBeer.size() ];
-        newBeer.toArray( simpleArray );
-
-        File path = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS);
-        File file = new File(path, "inventory.csv");
-        if(file.exists()){
-            try {
-                //PrintWriter fw = new PrintWriter(file);
-                PrintWriter fw = new PrintWriter(new FileWriter(file, true));
-                Log.d("handler", "printing to file");
-                for (int i = 0; i < simpleArray.length; i++) {
-                    fw.write(simpleArray[i]);
-                    fw.write(",");
-                }
-                fw.write("\n");
-                fw.flush();
-            } catch (FileNotFoundException e) {
-                e.printStackTrace();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
-        else
-        {
-            path.mkdirs();
-            PrintWriter fw = null;
-            try {
-                fw = new PrintWriter(file);
-            } catch (FileNotFoundException e) {
-                e.printStackTrace();
-            }
-            Log.d("handler", "making file");
-            for (int i = 0; i < simpleArray.length; i++) {
-                fw.write(simpleArray[i]);
-                fw.write(",");
-            }
-            fw.write("\n");
-            fw.flush();
-        }
-
-    }*/
 }
 

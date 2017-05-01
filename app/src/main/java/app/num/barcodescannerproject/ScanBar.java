@@ -3,6 +3,7 @@ package app.num.barcodescannerproject;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
@@ -115,7 +116,7 @@ public class ScanBar extends AppCompatActivity implements ZXingScannerView.Resul
                     public void onClick(DialogInterface dialogInterface, int i) {
                         newInv.add(product_name);
                         newInv.add(String.valueOf(i));
-                        update(newInv);
+                        addResult(product_name);
                     }
                 })
                 .setNegativeButton(android.R.string.cancel, null)
@@ -156,47 +157,12 @@ public class ScanBar extends AppCompatActivity implements ZXingScannerView.Resul
             product_name = name;
         }
     }
+    public void addResult(String name) {
 
-    public void update(List<String> newBeer) {
-
-        String[] simpleArray = new String[ newBeer.size() ];
-        newBeer.toArray( simpleArray );
-
-        File path = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS);
-        File file = new File(path, "inventory.csv");
-        if(file.exists()){
-            try {
-                //PrintWriter fw = new PrintWriter(file);
-                PrintWriter fw = new PrintWriter(new FileWriter(file, true));
-                Log.d("handler", "printing to file");
-                for (int i = 0; i < simpleArray.length; i++) {
-                    fw.write(simpleArray[i]);
-                    fw.write(",");
-                }
-                fw.write("\n");
-                fw.flush();
-            } catch (FileNotFoundException e) {
-                e.printStackTrace();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
-        else
-        {
-            path.mkdirs();
-            PrintWriter fw = null;
-            try {
-                fw = new PrintWriter(file);
-            } catch (FileNotFoundException e) {
-                e.printStackTrace();
-            }
-            Log.d("handler", "making file");
-            for (int i = 0; i < simpleArray.length; i++) {
-                fw.write(simpleArray[i]);
-                fw.write(",");
-            }
-            fw.write("\n");
-            fw.flush();
-        }
+        Intent intent = new Intent(this,AddItem.class);
+        //intent.putExtra("isAdded", true);
+        intent.putExtra(Config.ITEM_NAME, name);
+        startActivity(intent);
     }
+
 }

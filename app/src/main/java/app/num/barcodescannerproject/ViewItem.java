@@ -11,6 +11,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -36,6 +37,7 @@ public class ViewItem extends AppCompatActivity implements View.OnClickListener 
     private String name;
     private String amount;
     private String rfid;
+    private String removed;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,9 +47,11 @@ public class ViewItem extends AppCompatActivity implements View.OnClickListener 
         Intent intent = getIntent();
 
         id = intent.getStringExtra(Config.ITEM_ID);
+        //Log.d("id", id);
         name = intent.getStringExtra(Config.ITEM_NAME);
         amount = intent.getStringExtra(Config.ITEM_AMOUNT);
         rfid = intent.getStringExtra(Config.ITEM_RFID);
+        removed = intent.getStringExtra(Config.ITEM_RFID);
 
         editTextId = (EditText) findViewById(R.id.editTextId);
         editTextName = (EditText) findViewById(R.id.editTextName);
@@ -87,8 +91,16 @@ public class ViewItem extends AppCompatActivity implements View.OnClickListener 
             @Override
             protected String doInBackground(Void... params) {
                 RequestHandler rh = new RequestHandler();
-                String s = rh.sendGetRequestParam(Config.URL_GET_ITEM,id);
-                return s;
+                if(Config.ITEM_RFID != "")
+                {
+                    Log.d("reached", "here");
+                    String s = rh.sendGetRequestParam(Config.URL_REMOVE_ITEM, rfid);
+                    return s;
+                }
+                else {
+                    String s = rh.sendGetRequestParam(Config.URL_GET_ITEM, id);
+                    return s;
+                }
             }
         }
         GetEmployee ge = new GetEmployee();

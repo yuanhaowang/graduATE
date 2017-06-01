@@ -85,42 +85,13 @@ public class ScanBar extends AppCompatActivity implements ZXingScannerView.Resul
             builder.setMessage("Product not found");
             AlertDialog alert1 = builder.create();
             alert1.show();
+            //addResult("");
         }
         else
         {
-            addResult();
+            addResult(product_name);
         }
         mScannerView.resumeCameraPreview(this);
-    }
-
-    public void addResult() {
-
-        Context context = ScanBar.this;
-        final List<String> newInv = new ArrayList<String>();
-
-        final NumberPicker picker = new NumberPicker(context);
-        picker.setMinValue(1);
-        picker.setMaxValue(50);
-
-        final FrameLayout layout = new FrameLayout(context);
-        layout.addView(picker, new FrameLayout.LayoutParams(
-                FrameLayout.LayoutParams.WRAP_CONTENT,
-                FrameLayout.LayoutParams.WRAP_CONTENT,
-                Gravity.CENTER));
-
-        new AlertDialog.Builder(context)
-                .setTitle(product_name)
-                .setView(layout)
-                .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialogInterface, int i) {
-                        newInv.add(product_name);
-                        newInv.add(String.valueOf(i));
-                        addResult(product_name);
-                    }
-                })
-                .setNegativeButton(android.R.string.cancel, null)
-                .show();
     }
 
     class RetrieveFeedTask extends AsyncTask<String, Void, String> {

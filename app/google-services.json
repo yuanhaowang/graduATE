@@ -1,0 +1,73 @@
+{
+  "project_info": {
+    "project_number": "300850972492",
+    "firebase_url": "https://push-e04cd.firebaseio.com",
+    "project_id": "push-e04cd",
+    "storage_bucket": "push-e04cd.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:300850972492:android:5920de3503a2d18c",
+        "android_client_info": {
+          "package_name": "com.google.firebase.quickstart.fcm"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "300850972492-fvrvqo9l8b0kurtf5sipco28vc3vo7hq.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBXVzWly3gfYyzIMnMdfqrNLSM1M53tHW0"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:300850972492:android:ff4cb200512849cc",
+        "android_client_info": {
+          "package_name": "app.num.barcodescannerproject"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "300850972492-fvrvqo9l8b0kurtf5sipco28vc3vo7hq.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBXVzWly3gfYyzIMnMdfqrNLSM1M53tHW0"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

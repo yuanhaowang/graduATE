@@ -6,11 +6,12 @@ package app.num.barcodescannerproject;
 public class Config {
 
     //Address of our scripts of the CRUD
-    public static final String URL_ADD="http://10.193.182.10/Inventory/addItem.php";
-    public static final String URL_GET_ALL = "http://10.193.182.10/Inventory/getAllItems.php";
-    public static final String URL_GET_ITEM = "http://10.193.182.10/Inventory/getItem.php?id=";
-    public static final String URL_UPDATE_ITEM = "http://10.193.182.10/Inventory/updateItem.php";
-    public static final String URL_DELETE_ITEM = "http://10.193.182.10/Inventory/deleteItem.php?id=";
+    public static final String URL_ADD="http://192.168.1.16/Inventory/addItem.php";
+    public static final String URL_GET_ALL = "http://192.168.1.16/Inventory/getAllItems.php";
+    public static final String URL_GET_ITEM = "http://192.168.1.16/Inventory/getItem.php?id=";
+    public static final String URL_UPDATE_ITEM = "http://192.168.1.16/Inventory/updateItem.php";
+    public static final String URL_DELETE_ITEM = "http://192.168.1.16/Inventory/deleteItem.php?id=";
+    public static final String URL_REMOVE_ITEM = "http://192.168.1.16/Inventory/removeItem.php?id=";
 
     //Keys that will be used to send the request to php scripts
     public static final String KEY_ITEM_ID = "id";
